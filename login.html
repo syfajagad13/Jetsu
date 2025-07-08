@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JETSUS😈</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      min-height: 100vh;
+      padding-top: 40px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 8px red;
+      border-radius: 6px;
+    }
+
+    .app-name {
+      color: red;
+      font-size: 20px;
+      text-shadow: 0 0 5px red;
+      animation: glow 1.5s infinite alternate;
+      margin-bottom: 25px;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px red; }
+      to   { text-shadow: 0 0 15px red; }
+    }
+
+    .box {
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(255,0,0,0.3);
+      max-width: 360px;
+      width: 90%;
+      margin-top: 15px;
+    }
+
+    input, select {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: white;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: red;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 14px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: darkred;
+    }
+
+    #dashboard { display: none; }
+
+    .input-tools-wrapper {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .input-tools-wrapper > * {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    #loadingBar, #countdown {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    #history {
+      margin-top: 20px;
+      text-align: left;
+      max-width: 360px;
+      width: 90%;
+    }
+
+    #history h3 {
+      margin-bottom: 10px;
+    }
+
+    #history ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    #history li {
+      background: #222;
+      margin-bottom: 5px;
+      padding: 8px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body onload="startPage()">
+
+  <!-- LOGIN -->
+  <div id="login">
+    <img src="https://i.postimg.cc/DzRn5NY1/images-1.jpg" class="logo" />
+    <div class="app-name">JETSUS😈</div>
+    <div class="box">
+      <input type="text" id="user" placeholder="Username"><br><br>
+      <input type="password" id="pass" placeholder="Password"><br>
+      <button onclick="doLogin()">LOGIN</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <h2 style="color:red; text-shadow: 0 0 5px red;">Selamat Datang di JETSUS😈</h2>
+    <div class="box">
+      <div class="input-tools-wrapper">
+        <input type="text" id="nomor" placeholder="+62xxxxxxxx">
+        <select id="toolSelect">
+          <option value="">Pilih Tool...</option>
+          <option value="tool1">BUG CRASH 1</option>
+          <option value="tool2">BUG AUTO MOCAD 2</option>
+          <option value="tool3">BUG AUTO DELAY 3</option>
+        </select>
+      </div>
+      <button onclick="sendData()">KIRIM</button>
+      <div id="loadingBar" style="display:none;">🔄 Sedang diproses...</div>
+      <div id="countdown" style="display:none;">⏳ Waktu tersisa:</div>
+    </div>
+
+    <div id="history">
+      <h3>Riwayat Proses:</h3>
+      <ul id="historyList"></ul>
+    </div>
+
+    <button onclick="doLogout()" style="margin-top:10px; background:gray;">LOGOUT</button>
+  </div>
+
+  <audio id="successSound">
+    <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg">
+  </audio>
+
+  <script>
+    function startPage() {
+      localStorage.removeItem("isLoggedIn");
+      document.getElementById('login').style.display = 'block';
+      document.getElementById('dashboard').style.display = 'none';
+      alert('Login DULU LAH CUY🙂!');
+    }
+
+    function doLogin() {
+      localStorage.setItem("isLoggedIn", "true");
+      alert('NAH UDAH BISA LOGIN LU😈🤬!');
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+    }
+
+    function sendData() {
+      const nomor = document.getElementById('nomor').value.trim();
+      const tool = document.getElementById('toolSelect').value;
+      if (!nomor.startsWith('+62') || nomor.length < 10) {
+        alert('Nomoor harus valid bro🙃. Gunakan format +62');
+        return;
+      }
+      if (!tool) {
+        alert('Pilih TOOLS NYA ANJNING😒!');
+        return;
+      }
+
+      const loadingBar = document.getElementById('loadingBar');
+      const countdown = document.getElementById('countdown');
+      loadingBar.style.display = 'block';
+      countdown.style.display = 'block';
+
+      let seconds = Math.floor(Math.random() * 3) + 3;
+
+      historyLog('Memulai ' + tool + ' ke nomor ' + nomor);
+
+      const interval = setInterval(() => {
+        countdown.textContent = '⏳ Waktu tersisa: ' + seconds + ' detik';
+        if (seconds-- <= 0) {
+          clearInterval(interval);
+          loadingBar.style.display = 'none';
+          countdown.style.display = 'none';
+          document.getElementById('successSound').play();
+          alert('✅ Sukses, sudah diproses!');
+          historyLog('Selesai ' + tool + ' ke nomor ' + nomor);
+        }
+      }, 1000);
+    }
+
+    function historyLog(text) {
+      const li = document.createElement('li');
+      li.textContent = text;
+      document.getElementById('historyList').prepend(li);
+    }
+
+    function doLogout() {
+      localStorage.removeItem('isLoggedIn');
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>
